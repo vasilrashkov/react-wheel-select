@@ -61,17 +61,19 @@
   ],
   "scripts": {
     "dev": "vite",
-    "build": "vite build && bun run build:lib",
+    "build": "vite build && yarn run build:lib",
     "build:lib": "tsup src/components/index.ts --format esm,cjs --dts --clean && cp src/components/WheelSelect.css dist/styles.css",
     "preview": "vite preview",
     "typecheck": "tsc --noEmit",
-    "prepublishOnly": "bun run build:lib"
+    "prepublishOnly": "yarn run build:lib"
   },
   "devDependencies": {
     "@types/bun": "latest",
     "@types/react": "^19.2.10",
     "@types/react-dom": "^19.2.3",
     "@vitejs/plugin-react": "^5.1.3",
+    "react": "^19.0.0",
+    "react-dom": "^19.0.0",
     "tsup": "^8.0.0",
     "typescript": "^5.0.0",
     "vite": "^7.3.1"
