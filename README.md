@@ -9,7 +9,7 @@
 
 **A beautiful, accessible iOS-style wheel picker component for React**
 
-[Documentation](#-documentation) · [Examples](#-examples) · [Contributing](#-contributing)
+[Live Demo](https://react-wheel-select.devapollo.com) · [Documentation](#-documentation) · [Examples](#-examples) · [Contributing](#-contributing)
 
 </div>
 
