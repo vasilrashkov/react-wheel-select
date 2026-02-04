@@ -13,7 +13,7 @@ body {
   -moz-osx-font-smoothing: grayscale;
 
   /* Dark background with grid pattern */
-  background-color: #000;
+  background-color: #0a0a0a;
   background-image:
     linear-gradient(rgba(255, 255, 255, 0.03) 1px, transparent 1px),
     linear-gradient(90deg, rgba(255, 255, 255, 0.03) 1px, transparent 1px);
@@ -24,24 +24,190 @@ body {
   min-height: 100vh;
 }
 
-/* App container - centered content */
+/* App container */
 .app {
   min-height: 100vh;
+  padding: 60px 20px;
+}
+
+/* Demo container */
+.demo-container {
+  max-width: 800px;
+  margin: 0 auto;
+}
+
+/* Header */
+.demo-header {
+  text-align: center;
+  margin-bottom: 60px;
+}
+
+.demo-header h1 {
+  font-size: 48px;
+  font-weight: 700;
+  margin: 0 0 12px 0;
+  background: linear-gradient(135deg, #fff 0%, #888 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+.demo-header .subtitle {
+  font-size: 18px;
+  color: #888;
+  margin: 0 0 24px 0;
+}
+
+.badges {
   display: flex;
-  align-items: center;
   justify-content: center;
-  padding: 40px 20px;
+  gap: 12px;
+  flex-wrap: wrap;
+}
+
+.badges a {
+  display: inline-block;
+}
+
+.badges img {
+  height: 20px;
+}
+
+/* Example sections */
+.example-section {
+  margin-bottom: 48px;
+}
+
+.example-section h2 {
+  font-size: 24px;
+  font-weight: 600;
+  margin: 0 0 8px 0;
+  color: #fff;
+}
+
+.example-description {
+  font-size: 14px;
+  color: #666;
+  margin: 0 0 16px 0;
+}
+
+/* Example cards */
+.example-card {
+  background: rgba(255, 255, 255, 0.03);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  border-radius: 16px;
+  padding: 32px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 24px;
+}
+
+.example-card.light {
+  background: #f8f9fa;
+  border-color: #e9ecef;
+}
+
+.example-card.gradient {
+  background: linear-gradient(135deg, rgba(139, 92, 246, 0.1) 0%, rgba(59, 130, 246, 0.1) 100%);
+  border-color: rgba(139, 92, 246, 0.2);
 }
 
 /* Demo text styling */
 .demo-text {
-  font-size: 32px;
+  font-size: 24px;
   font-weight: 400;
   margin: 0;
   display: flex;
   align-items: center;
   gap: 8px;
+  flex-wrap: wrap;
+  justify-content: center;
   /* Keep text above picker backdrop */
   position: relative;
   z-index: 10000;
+}
+
+.demo-text.dark-text {
+  color: #1a1a1a;
+}
+
+.demo-text.small-text {
+  font-size: 18px;
+}
+
+/* Button row for ref example */
+.button-row {
+  display: flex;
+  gap: 8px;
+  flex-wrap: wrap;
+  justify-content: center;
+}
+
+.button-row button {
+  background: rgba(255, 255, 255, 0.1);
+  border: 1px solid rgba(255, 255, 255, 0.15);
+  color: #fff;
+  padding: 8px 16px;
+  border-radius: 8px;
+  font-size: 14px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.button-row button:hover {
+  background: rgba(255, 255, 255, 0.15);
+  border-color: rgba(255, 255, 255, 0.25);
+}
+
+.button-row button:active {
+  transform: scale(0.98);
+}
+
+/* Footer */
+.demo-footer {
+  margin-top: 80px;
+  padding-top: 32px;
+  border-top: 1px solid rgba(255, 255, 255, 0.08);
+  text-align: center;
+}
+
+.demo-footer p {
+  margin: 0;
+  font-size: 14px;
+  color: #666;
+}
+
+.demo-footer a {
+  color: #888;
+  text-decoration: none;
+  transition: color 0.2s ease;
+}
+
+.demo-footer a:hover {
+  color: #fff;
+}
+
+/* Responsive */
+@media (max-width: 640px) {
+  .demo-header h1 {
+    font-size: 32px;
+  }
+
+  .demo-header .subtitle {
+    font-size: 16px;
+  }
+
+  .example-section h2 {
+    font-size: 20px;
+  }
+
+  .demo-text {
+    font-size: 20px;
+  }
+
+  .example-card {
+    padding: 24px 16px;
+  }
 }
