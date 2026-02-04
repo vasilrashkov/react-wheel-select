@@ -1,0 +1,53 @@
+# Source files (we only publish dist)
+src/
+*.tsx
+*.ts
+!*.d.ts
+
+# Config files
+tsconfig.json
+tsup.config.ts
+vite.config.ts
+.eslintrc*
+.prettierrc*
+.editorconfig
+
+# Development files
+*.test.*
+*.spec.*
+__tests__/
+coverage/
+.nyc_output/
+
+# Build artifacts not needed
+node_modules/
+.cache/
+.parcel-cache/
+
+# IDE
+.vscode/
+.idea/
+*.swp
+*.swo
+.DS_Store
+
+# Git
+.git/
+.gitignore
+
+# Documentation source
+docs/
+CONTRIBUTING.md
+CHANGELOG.md
+
+# Demo/example files
+index.html
+public/
+
+# CI/CD
+.github/
+.travis.yml
+.circleci/
+
+# Claude
+CLAUDE.md

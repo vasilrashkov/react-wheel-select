@@ -1,0 +1,391 @@
+/**
+ * WheelSelect - iOS-style Wheel Picker for React
+ *
+ * A fully customizable wheel select component with CSS custom properties.
+ * All visual aspects can be configured via props or CSS variables.
+ *
+ * @package @wheel-select/react
+ * @version 1.0.0
+ */
+
+/* ============================================================================
+   CSS Custom Properties (Design Tokens)
+   ============================================================================
+
+   These variables can be overridden via:
+   1. Component props (theme, sizing)
+   2. CSS custom properties on parent elements
+   3. Global CSS overrides
+*/
+
+.ws-root {
+  /* Colors - Dark theme defaults */
+  --ws-color-text: inherit;
+  --ws-color-text-muted: inherit;
+  --ws-color-active-bg: rgba(255, 255, 255, 0.12);
+  --ws-color-hover-bg: rgba(255, 255, 255, 0.12);
+  --ws-color-backdrop-bg: rgba(0, 0, 0, 0.5);
+  --ws-color-focus-ring: rgba(255, 255, 255, 0.5);
+
+  /* Border radius */
+  --ws-border-radius: 12px;
+
+  /* Typography */
+  --ws-font-family: inherit;
+  --ws-font-size: 28px;
+  --ws-font-weight: 500;
+  --ws-font-size-trigger: inherit;
+
+  /* Animation */
+  --ws-animation-duration: 200ms;
+  --ws-animation-easing: ease;
+
+  /* Spacing */
+  --ws-trigger-gap: 16px;
+  --ws-trigger-padding: 8px 16px;
+  --ws-option-gap: 16px;
+  --ws-option-padding: 0 20px;
+
+  /* Sizing */
+  --ws-wheel-height: 320px;
+  --ws-wheel-min-width: 220px;
+  --ws-option-height: 56px;
+  --ws-icon-size: 20px;
+  --ws-spacer-height: 132px;
+
+  /* Z-index */
+  --ws-z-index: 10001;
+
+  /* Internal variables */
+  --ws-inactive-opacity: 0.35;
+  --ws-hover-opacity: 0.5;
+  --ws-backdrop-blur: 4px;
+}
+
+/* ============================================================================
+   Light Theme
+   ============================================================================ */
+
+.ws-root.ws-light {
+  --ws-color-active-bg: rgba(0, 0, 0, 0.08);
+  --ws-color-hover-bg: rgba(0, 0, 0, 0.08);
+  --ws-color-backdrop-bg: rgba(255, 255, 255, 0.8);
+  --ws-color-focus-ring: rgba(0, 0, 0, 0.3);
+}
+
+/* ============================================================================
+   Root Container
+   ============================================================================ */
+
+.ws-root {
+  display: inline;
+  position: relative;
+  font-family: var(--ws-font-family);
+}
+
+/* ============================================================================
+   Hidden Native Select (for form submission & accessibility)
+   ============================================================================ */
+
+.ws-native-select {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+  border: 0;
+}
+
+/* ============================================================================
+   Trigger Button
+   ============================================================================ */
+
+.ws-trigger {
+  /* Reset button styles */
+  border: none;
+  background: transparent;
+  font: inherit;
+  font-size: var(--ws-font-size-trigger);
+  color: var(--ws-color-text);
+  cursor: pointer;
+  margin: 0;
+
+  /* Layout */
+  display: inline-flex;
+  align-items: center;
+  gap: var(--ws-trigger-gap);
+  padding: var(--ws-trigger-padding);
+  border-radius: var(--ws-border-radius);
+
+  /* Transitions */
+  transition: background-color var(--ws-animation-duration) var(--ws-animation-easing);
+}
+
+.ws-trigger:hover:not(:disabled) {
+  background-color: var(--ws-color-hover-bg);
+}
+
+.ws-trigger:focus {
+  outline: none;
+}
+
+.ws-trigger:focus-visible {
+  outline: 2px solid var(--ws-color-focus-ring);
+  outline-offset: 2px;
+}
+
+.ws-trigger.ws-open {
+  background-color: var(--ws-color-hover-bg);
+}
+
+.ws-trigger:disabled {
+  cursor: not-allowed;
+  opacity: 0.5;
+}
+
+.ws-trigger-text {
+  /* Allow text to be styled independently */
+}
+
+.ws-chevron {
+  opacity: 0.5;
+  flex-shrink: 0;
+  width: var(--ws-icon-size);
+  height: var(--ws-icon-size);
+}
+
+/* ============================================================================
+   Backdrop Overlay
+   ============================================================================ */
+
+.ws-backdrop {
+  position: fixed;
+  inset: 0;
+  z-index: var(--ws-z-index);
+
+  /* Semi-transparent blur */
+  background: var(--ws-color-backdrop-bg);
+  backdrop-filter: blur(var(--ws-backdrop-blur));
+  -webkit-backdrop-filter: blur(var(--ws-backdrop-blur));
+
+  /* Fade in */
+  animation: ws-backdrop-fade-in var(--ws-animation-duration) var(--ws-animation-easing);
+}
+
+@keyframes ws-backdrop-fade-in {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+/* Reduced motion support */
+@media (prefers-reduced-motion: reduce) {
+  .ws-backdrop {
+    animation: none;
+  }
+}
+
+/* ============================================================================
+   Picker Container
+   ============================================================================ */
+
+.ws-picker {
+  position: absolute;
+  transform: translateY(-50%);
+
+  /* Scale in animation */
+  animation: ws-picker-fade-in var(--ws-animation-duration) var(--ws-animation-easing);
+}
+
+@keyframes ws-picker-fade-in {
+  from {
+    opacity: 0;
+    transform: translateY(-50%) scale(0.95);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(-50%) scale(1);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .ws-picker {
+    animation: none;
+  }
+}
+
+/* ============================================================================
+   Wheel (Scrollable Options Container)
+   ============================================================================ */
+
+.ws-wheel {
+  /* Dimensions */
+  height: var(--ws-wheel-height);
+  min-width: var(--ws-wheel-min-width);
+
+  /* Scrolling */
+  overflow-y: auto;
+  overflow-x: hidden;
+  overscroll-behavior: contain;
+
+  /* CSS Scroll Snapping */
+  scroll-snap-type: y proximity;
+
+  /* Touch optimization */
+  -webkit-overflow-scrolling: touch;
+  touch-action: pan-y;
+
+  /* Hide scrollbar */
+  scrollbar-width: none;
+  -ms-overflow-style: none;
+}
+
+.ws-wheel::-webkit-scrollbar {
+  display: none;
+}
+
+.ws-wheel:focus {
+  outline: none;
+}
+
+/* ============================================================================
+   Spacers (for centering first/last items)
+   ============================================================================ */
+
+.ws-spacer {
+  height: var(--ws-spacer-height);
+  flex-shrink: 0;
+}
+
+/* ============================================================================
+   Option Items
+   ============================================================================ */
+
+.ws-option {
+  /* Dimensions */
+  height: var(--ws-option-height);
+  min-width: calc(var(--ws-wheel-min-width) - 20px);
+
+  /* Layout */
+  display: flex;
+  align-items: center;
+  justify-content: flex-start;
+  gap: var(--ws-option-gap);
+  padding: var(--ws-option-padding);
+
+  /* Scroll snapping */
+  scroll-snap-align: center;
+
+  /* Typography */
+  font-family: var(--ws-font-family);
+  font-size: var(--ws-font-size);
+  font-weight: var(--ws-font-weight);
+  color: var(--ws-color-text);
+
+  /* Interaction */
+  cursor: pointer;
+  user-select: none;
+  touch-action: manipulation;
+
+  /* Inactive state */
+  opacity: var(--ws-inactive-opacity);
+
+  /* Visual */
+  border-radius: var(--ws-border-radius);
+
+  /* Transitions */
+  transition:
+    opacity var(--ws-animation-duration) var(--ws-animation-easing),
+    background-color var(--ws-animation-duration) var(--ws-animation-easing);
+
+  /* Stacking */
+  position: relative;
+  z-index: 1;
+}
+
+.ws-option:hover:not(.ws-disabled) {
+  opacity: var(--ws-hover-opacity);
+}
+
+/* Active (centered) option */
+.ws-option.ws-active {
+  opacity: 1;
+  background-color: var(--ws-color-active-bg);
+}
+
+.ws-option.ws-active:hover {
+  opacity: 1;
+}
+
+/* Disabled option */
+.ws-option.ws-disabled {
+  cursor: not-allowed;
+  opacity: 0.2;
+}
+
+.ws-option-text {
+  flex: 1;
+  pointer-events: none;
+}
+
+.ws-arrow {
+  opacity: 0.7;
+  flex-shrink: 0;
+  pointer-events: none;
+  width: var(--ws-icon-size);
+  height: var(--ws-icon-size);
+}
+
+/* ============================================================================
+   Utility Classes
+   ============================================================================ */
+
+/* Hide visually but keep accessible */
+.ws-sr-only {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+  border: 0;
+}
+
+/* ============================================================================
+   Print Styles
+   ============================================================================ */
+
+@media print {
+  .ws-backdrop,
+  .ws-picker {
+    display: none;
+  }
+
+  .ws-trigger {
+    background: transparent !important;
+  }
+}
+
+/* ============================================================================
+   High Contrast Mode
+   ============================================================================ */
+
+@media (forced-colors: active) {
+  .ws-trigger:focus-visible {
+    outline: 2px solid CanvasText;
+  }
+
+  .ws-option.ws-active {
+    outline: 2px solid CanvasText;
+    background: Highlight;
+    color: HighlightText;
+  }
+}

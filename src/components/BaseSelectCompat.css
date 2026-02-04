@@ -1,0 +1,319 @@
+/**
+ * BaseSelectCompat Styles
+ *
+ * Provides styling for both the native base-select mode and the fallback inline wheel picker.
+ * Design matches an inline wheel picker with pill-shaped active item.
+ */
+
+/* ========================================
+   NATIVE MODE (appearance: base-select)
+   ======================================== */
+
+.base-select-compat.native {
+  display: inline;
+}
+
+/*
+ * Native select styled with base-select.
+ * When the browser supports appearance: base-select, we can style the
+ * native select and its dropdown picker natively.
+ */
+.base-select-native {
+  /* Use the new stylable select API */
+  appearance: base-select;
+
+  /* Match the inline text trigger style */
+  border: none;
+  background: transparent;
+  font: inherit;
+  color: inherit;
+  cursor: pointer;
+  padding: 0;
+  margin: 0;
+
+  /* Subtle interaction feedback */
+  opacity: 1;
+  transition: opacity 0.15s ease;
+}
+
+.base-select-native:hover {
+  opacity: 0.7;
+}
+
+.base-select-native:active {
+  opacity: 0.5;
+}
+
+/* Style the picker popup for browsers that support it */
+.base-select-native::picker(select) {
+  appearance: base-select;
+}
+
+/* ========================================
+   FALLBACK MODE (Custom Inline Wheel Picker)
+   ======================================== */
+
+.base-select-compat.fallback {
+  display: inline;
+  position: relative;
+}
+
+/* Hidden native select for form submission */
+.base-select-hidden {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+  border: 0;
+}
+
+/* ========================================
+   TRIGGER BUTTON
+   ======================================== */
+
+/*
+ * Text trigger - plain inline text with chevron icon.
+ * Shows pill background only on hover.
+ */
+.base-select-trigger {
+  /* Reset button styles */
+  border: none;
+  background: transparent;
+  font: inherit;
+  color: inherit;
+  cursor: pointer;
+  margin: 0;
+
+  /* Inline flex for text + icon alignment */
+  display: inline-flex;
+  align-items: center;
+  gap: 16px;
+
+  /* Padding for pill shape */
+  padding: 8px 16px;
+  border-radius: 12px;
+
+  /* Smooth transitions */
+  transition: background-color 0.2s ease;
+}
+
+.base-select-trigger:hover {
+  background-color: rgba(255, 255, 255, 0.12);
+}
+
+.base-select-trigger:focus {
+  outline: none;
+}
+
+.base-select-trigger:focus-visible {
+  outline: 2px solid rgba(255, 255, 255, 0.5);
+  outline-offset: 2px;
+}
+
+.base-select-trigger.open {
+  background-color: rgba(255, 255, 255, 0.12);
+}
+
+.base-select-trigger-text {
+  /* Text styling */
+}
+
+.base-select-chevron {
+  opacity: 0.5;
+  flex-shrink: 0;
+}
+
+/* ========================================
+   BACKDROP
+   ======================================== */
+
+/*
+ * Backdrop covers the entire viewport with a subtle blur.
+ * Clicking it closes the picker without changing value.
+ * The blur is subtle enough to keep surrounding text readable.
+ */
+.base-select-backdrop {
+  position: fixed;
+  inset: 0;
+  z-index: 10001;
+
+  /* Subtle dimmed and blurred background - keeps text readable */
+  background: rgba(0, 0, 0, 0.5);
+  backdrop-filter: blur(4px);
+  -webkit-backdrop-filter: blur(4px);
+
+  /* Fade in animation */
+  animation: backdrop-fade-in 0.2s ease;
+}
+
+@keyframes backdrop-fade-in {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+/* ========================================
+   PICKER CONTAINER
+   ======================================== */
+
+/*
+ * The picker is positioned to align with the trigger.
+ * It contains the scrollable wheel of options.
+ */
+.base-select-picker {
+  position: absolute;
+  transform: translateY(-50%);
+
+  /* Scale in animation */
+  animation: picker-fade-in 0.2s ease;
+}
+
+@keyframes picker-fade-in {
+  from {
+    opacity: 0;
+    transform: translateY(-50%) scale(0.95);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(-50%) scale(1);
+  }
+}
+
+/* ========================================
+   WHEEL (Scrollable Options)
+   ======================================== */
+
+/*
+ * The wheel is a scrollable container with CSS scroll snapping.
+ * This creates the iOS-style picker wheel behavior.
+ */
+.base-select-wheel {
+  /* Fixed viewport height to show ~5 items */
+  height: 320px;
+  min-width: 220px;
+  overflow-y: auto;
+  overflow-x: hidden;
+
+  /* CSS Scroll Snapping - proximity allows clicks to work better */
+  scroll-snap-type: y proximity;
+
+  /* Touch momentum scrolling */
+  -webkit-overflow-scrolling: touch;
+
+  /* Hide scrollbar for cleaner look */
+  scrollbar-width: none;
+  -ms-overflow-style: none;
+}
+
+.base-select-wheel::-webkit-scrollbar {
+  display: none;
+}
+
+.base-select-wheel:focus {
+  outline: none;
+}
+
+/*
+ * Spacers at top and bottom allow first/last items to be centered.
+ * Height matches approximately half the wheel height minus half item height.
+ */
+.base-select-spacer {
+  height: 132px;
+  flex-shrink: 0;
+}
+
+/* ========================================
+   OPTIONS
+   ======================================== */
+
+/*
+ * Each option snaps to center when scrolling.
+ * Active option has pill background and arrow icon.
+ * Inactive options are faded.
+ */
+.base-select-option {
+  /* Fixed height for consistent scroll behavior */
+  height: 56px;
+  min-width: 200px;
+  display: flex;
+  align-items: center;
+  justify-content: flex-start;
+  gap: 16px;
+
+  /* Padding for text - full clickable area */
+  padding: 0 20px;
+
+  /* Snap to center of container */
+  scroll-snap-align: center;
+
+  /* Text styling */
+  font-size: 28px;
+  font-weight: 500;
+  color: white;
+  cursor: pointer;
+
+  /* Fade inactive items */
+  opacity: 0.35;
+  transition: opacity 0.15s ease, background-color 0.15s ease;
+
+  /* Prevent text selection during scroll */
+  user-select: none;
+
+  /* Rounded for pill shape when active */
+  border-radius: 12px;
+
+  /* Ensure clicks are captured */
+  touch-action: manipulation;
+  position: relative;
+  z-index: 1;
+}
+
+.base-select-option:hover {
+  opacity: 0.5;
+}
+
+/*
+ * Active option styling - full opacity with pill background.
+ * This is the item closest to the center of the wheel.
+ */
+.base-select-option.active {
+  opacity: 1;
+  background-color: rgba(255, 255, 255, 0.12);
+}
+
+.base-select-option.active:hover {
+  opacity: 1;
+}
+
+.base-select-option-text {
+  flex: 1;
+  /* Allow clicks to pass through to parent */
+  pointer-events: none;
+}
+
+.base-select-arrow {
+  opacity: 0.7;
+  flex-shrink: 0;
+  /* Allow clicks to pass through to parent */
+  pointer-events: none;
+}
+
+/* ========================================
+   LIGHT MODE VARIANT
+   ======================================== */
+
+/* For light backgrounds, use dark colors */
+.base-select-compat.light .base-select-trigger:hover {
+  background-color: rgba(0, 0, 0, 0.08);
+}
+
+.base-select-compat.light .base-select-trigger.open {
+  background-color: rgba(0, 0, 0, 0.08);
+}
