@@ -738,6 +738,13 @@ function WheelSelectInner<T extends string = string>(
           aria-modal="true"
           aria-label={a11y?.pickerLabel ?? 'Select an option'}
         >
+          {/* Fixed center highlight - stays in place while scrolling */}
+          <div className="ws-center-highlight" aria-hidden="true">
+            {!icons?.hideArrow && (
+              icons?.arrow ?? <DefaultArrowIcon size={sizing.iconSize} className="ws-arrow" />
+            )}
+          </div>
+
           <div
             ref={wheelRef}
             className="ws-wheel"
@@ -783,9 +790,6 @@ function WheelSelectInner<T extends string = string>(
                   onClick={handleItemClick(index)}
                 >
                   <span className="ws-option-text">{option.label}</span>
-                  {isActive && !icons?.hideArrow && (
-                    icons?.arrow ?? <DefaultArrowIcon size={sizing.iconSize} className="ws-arrow" />
-                  )}
                 </div>
               )
             })}

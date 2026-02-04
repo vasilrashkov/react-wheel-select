@@ -203,6 +203,37 @@
   animation: ws-picker-fade-in var(--ws-animation-duration) var(--ws-animation-easing);
 }
 
+/* ============================================================================
+   Fixed Center Highlight (stays in place while scrolling)
+   ============================================================================ */
+
+.ws-center-highlight {
+  position: absolute;
+  left: 0;
+  right: 0;
+  top: 50%;
+  transform: translateY(-50%);
+  height: var(--ws-option-height);
+  min-width: var(--ws-wheel-min-width);
+  background-color: var(--ws-color-active-bg);
+  border-radius: var(--ws-border-radius);
+  pointer-events: none;
+  z-index: 0;
+
+  /* Layout for arrow icon */
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  padding: var(--ws-option-padding);
+}
+
+.ws-center-highlight .ws-arrow {
+  opacity: 0.7;
+  flex-shrink: 0;
+  width: var(--ws-icon-size);
+  height: var(--ws-icon-size);
+}
+
 @keyframes ws-picker-fade-in {
   from {
     opacity: 0;
@@ -244,6 +275,10 @@
   /* Hide scrollbar */
   scrollbar-width: none;
   -ms-overflow-style: none;
+
+  /* Stacking context - options appear above fixed highlight */
+  position: relative;
+  z-index: 1;
 }
 
 .ws-wheel::-webkit-scrollbar {
@@ -316,7 +351,6 @@
 /* Active (centered) option */
 .ws-option.ws-active {
   opacity: 1;
-  background-color: var(--ws-color-active-bg);
 }
 
 .ws-option.ws-active:hover {
