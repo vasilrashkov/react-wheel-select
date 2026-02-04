@@ -1,6 +1,6 @@
 {
   "name": "react-wheel-select",
-  "version": "1.0.0",
+  "version": "0.0.1",
   "description": "A beautiful, accessible iOS-style wheel picker component for React. Features smooth scroll snapping, keyboard navigation, full customization via CSS variables, and TypeScript support.",
   "author": "Vasil Rashkov <vasil.rashkov@example.com>",
   "license": "MIT",
